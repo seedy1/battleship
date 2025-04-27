@@ -1,4 +1,4 @@
-package com.sj.batlleship.batlleship;
+package com.sj.batlleship.batlleship.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
