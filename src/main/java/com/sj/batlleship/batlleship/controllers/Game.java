@@ -4,11 +4,7 @@ import com.sj.batlleship.batlleship.enums.ShipType;
 import com.sj.batlleship.batlleship.enums.Orientation;
 import com.sj.batlleship.batlleship.enums.CellState;
 import com.sj.batlleship.batlleship.enums.GameState;
-import com.sj.batlleship.batlleship.models.HumanPlayer;
-import com.sj.batlleship.batlleship.models.RandomAIPlayer;
-import com.sj.batlleship.batlleship.models.Ship;
-import com.sj.batlleship.batlleship.models.Cell;
-import com.sj.batlleship.batlleship.models.PlayerGameBoard;
+import com.sj.batlleship.batlleship.models.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,12 +27,13 @@ import java.util.Optional;
 
 import org.kordamp.bootstrapfx.BootstrapFX;
 
-
 public class Game{
 
-    private boolean useRandomCPU = true;
+    @FXML
+    public Button rotateShipButton;
+    private boolean useRandomCPU;
     private HumanPlayer humanPlayer;
-    private RandomAIPlayer randomAIPlayer;
+    private Player AIComputerPlayer;
     final static double visualGridSize = 38.0;
     private int currentShipIndex = 0;
     private List<ShipType> shipsToDisplay;
@@ -87,9 +84,11 @@ public class Game{
 
         // setup game
         humanPlayer = new HumanPlayer();
-        randomAIPlayer = new RandomAIPlayer();
+        AIComputerPlayer = useRandomCPU ? new RandomAIPlayer() : new SmartAIPlayer();
+        System.out.println("AIComputerPlayer is " + (AIComputerPlayer == null ? "null" : "not null"));
+
         // humanPlayer.getGameBoard().printBoardToConsole();
-        randomAIPlayer.getGameBoard().printBoardToConsole();
+        AIComputerPlayer.getGameBoard().printBoardToConsole();
         // TODO: add ship types on wiki
         shipsToDisplay = List.of(
                 ShipType.CARRIER,
@@ -97,9 +96,9 @@ public class Game{
         );
         // set up grids
 //        randomAIPlayer.placeShipRandom();
-        randomAIPlayer.placeShipRandom();
+        AIComputerPlayer.placeShipRandom();
         System.out.println("\nComputer's board after ship placement:");
-        randomAIPlayer.getGameBoard().printBoardToConsole();
+        AIComputerPlayer.getGameBoard().printBoardToConsole();
         setupPlayerBoard();
         System.out.println("startGame - setupPlayerBoard");
         setupEnemyBoard();
@@ -232,7 +231,7 @@ public class Game{
                 // Update enemy board
                 StackPane enemyCell = (StackPane) enemyBoard.getChildren().get(row * 10 + col);
                 enemyCell.getChildren().clear();
-                Cell enemyCellState = randomAIPlayer.getGameBoard().getCell(row, col);
+                Cell enemyCellState = AIComputerPlayer.getGameBoard().getCell(row, col);
 
                 if(enemyCellState.getState() == CellState.HIT){
                     enemyCell.setStyle("-fx-border-color: black; -fx-background-color: red;");
@@ -251,17 +250,17 @@ public class Game{
         }
 
         // Check if the cell has already been attacked
-        Cell targetCell = randomAIPlayer.getGameBoard().getCell(row, column);
+        Cell targetCell = AIComputerPlayer.getGameBoard().getCell(row, column);
         if(targetCell.getState() == CellState.HIT || targetCell.getState() == CellState.MISS){
             gameStatusText.setText("You already attacked this cell! Try again.");
             return;
         }
 
-        boolean hit = randomAIPlayer.getGameBoard().receiveAttack(row, column);
+        boolean hit = AIComputerPlayer.getGameBoard().receiveAttack(row, column);
         updateBoards();
 
         // Check if player won
-        if(checkWinner(randomAIPlayer.getGameBoard(), true)){
+        if(checkWinner(AIComputerPlayer.getGameBoard(), true)){
             return;
         }
 
@@ -273,7 +272,7 @@ public class Game{
 
         currentGameState = GameState.COMPUTER_TURN;
         // Computer's turn
-        randomAIPlayer.makeMove(humanPlayer.getGameBoard());
+        AIComputerPlayer.makeMove(humanPlayer.getGameBoard());
         updateBoards();
 
         // Check if computer won
@@ -295,10 +294,10 @@ public class Game{
 
         // Reset players
         humanPlayer = new HumanPlayer();
-        randomAIPlayer = new RandomAIPlayer();
+        AIComputerPlayer = useRandomCPU ? new RandomAIPlayer(): new SmartAIPlayer();
 
         // Place computer's ships
-        randomAIPlayer.placeShipRandom();
+        AIComputerPlayer.placeShipRandom();
 
         // Reset boards
         setupPlayerBoard();
@@ -316,6 +315,7 @@ public class Game{
 
     @FXML
     public void rotateShip(ActionEvent actionEvent){
+        //TODO: disable btn
         if(currentGameState != GameState.SETUP){
             return;
         }
@@ -340,6 +340,7 @@ public class Game{
                 // Rotate the image based on orientation
                 showCurrentShip.setRotate(currentOrientation == Orientation.HORIZONTAL ? 90 : 0);
                 shipNameLabel.setText(type.name());
+                rotateShipButton.setDisable(false);
                 System.out.println("Ship preview updated successfully with orientation: " + currentOrientation);
             }catch(Exception e){
                 System.out.println("Error loading ship preview image: " + e.getMessage());
@@ -348,6 +349,7 @@ public class Game{
         }else{
             showCurrentShip.setImage(null);
             shipNameLabel.setText("All ships placed");
+            rotateShipButton.setDisable(true);
         }
     }
 

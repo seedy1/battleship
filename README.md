@@ -1,3 +1,12 @@
+- [x] random AI
+- [x] refactor
+- [x] smart AI
+- [] unit test
+- [] impr UI
+- [] refactor 
+- [] CI/CD (create build on commits to master; if tests pass aussi)
+
+
 # Javafx Battleship Game
 
 ```
@@ -44,3 +53,9 @@ The launcher waits for the application to finish and calls the stop() method.
 
 javafx vs swing
 game lib vs coding
+https://www.wikihow.com/Win-at-Battleship
+https://www.thesprucecrafts.com/how-to-win-at-battleship-411068
+## future features and improvemnts
+
+1. Multiplayer Lan
+2. Animations

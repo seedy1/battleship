@@ -25,10 +25,10 @@ public class Welcome{
     protected void startSoloGameWithSmartAI(ActionEvent actionEvent){
         //TODO: add logs / logging
         System.out.println("Starting solo game with Smart AI");
-        testClick.setOnMouseEntered(e -> System.out.println("hover"));
-        testClick.setOnMouseClicked((MouseEvent e)-> {
-                    System.out.println("event: " + e.getEventType()); });
-//        loadGameScene(actionEvent, true);
+//        testClick.setOnMouseEntered(e -> System.out.println("hover"));
+//        testClick.setOnMouseClicked((MouseEvent e)-> {
+//                    System.out.println("event: " + e.getEventType()); });
+        loadGameScene(actionEvent, false);
     }
 
     /**

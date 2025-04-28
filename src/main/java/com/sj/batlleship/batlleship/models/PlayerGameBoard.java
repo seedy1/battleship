@@ -185,4 +185,8 @@ public class PlayerGameBoard {
         return grid[row][col];
     }
 
+    public Cell[][] getCells(){
+        return grid;
+    }
+
 }
