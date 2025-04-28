@@ -2,7 +2,7 @@
 - [x] refactor
 - [x] smart AI
 - [x] unit test
-- [] impr UI
+- [x] impr UI
 - [] refactor 
 - [] CI/CD (create build on commits to master; if tests pass aussi)
 

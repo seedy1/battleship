@@ -1,5 +1,6 @@
 package com.sj.batlleship.batlleship.controllers;
 
+import com.sj.batlleship.batlleship.constants.CellColors;
 import com.sj.batlleship.batlleship.enums.ShipType;
 import com.sj.batlleship.batlleship.enums.Orientation;
 import com.sj.batlleship.batlleship.enums.CellState;
@@ -29,6 +30,9 @@ import org.kordamp.bootstrapfx.BootstrapFX;
 
 public class Game{
 
+    public static final String BBB = "-fx-border-color: black; -fx-background-color: #00000f;";
+    public static final String HIT = "-fx-border-color: black; -fx-background-color: red;";
+    public static final String MISS = "-fx-border-color: black; -fx-background-color: gray;";
     @FXML
     public Button rotateShipButton;
     private boolean useRandomCPU;
@@ -139,7 +143,8 @@ public class Game{
             for(int j=0;j<10;j++){ // cols
                 StackPane stackPane = new StackPane();
                 stackPane.setPrefSize(visualGridSize,visualGridSize);
-                stackPane.setStyle("-fx-border-color: black; -fx-background-color: #908a8a;");
+//                stackPane.setStyle("-fx-border-color: black; -fx-background-color: #908a8a;");
+                stackPane.setStyle(CellColors.DEFAULT_CELL_COLOR);
                 final int row = i;
                 final int column = j;
                 stackPane.setOnMouseClicked((MouseEvent e)->{
@@ -183,7 +188,7 @@ public class Game{
             for(int j = 0; j < 10; j++){
                 StackPane cellPane = new StackPane();
                 cellPane.setPrefSize(visualGridSize, visualGridSize);
-                cellPane.setStyle("-fx-border-color: black; -fx-background-color: #908a8a;");
+                cellPane.setStyle(CellColors.DEFAULT_CELL_COLOR);
 
                 final int row = i;
                 final int col = j;
@@ -221,11 +226,11 @@ public class Game{
                         }
                     }
                 }else if(playerCellState.getState() == CellState.HIT){
-                    playerCell.setStyle("-fx-border-color: black; -fx-background-color: red;");
+                    playerCell.setStyle(CellColors.HIT_CELL_COLOR);
                 }else if(playerCellState.getState() == CellState.MISS){
-                    playerCell.setStyle("-fx-border-color: black; -fx-background-color: gray;");
+                    playerCell.setStyle(CellColors.MISS_CELL_COLOR);
                 }else{
-                    playerCell.setStyle("-fx-border-color: black; -fx-background-color: #908a8a;");
+                    playerCell.setStyle(CellColors.DEFAULT_CELL_COLOR);
                 }
 
                 // Update enemy board
@@ -234,11 +239,11 @@ public class Game{
                 Cell enemyCellState = AIComputerPlayer.getGameBoard().getCell(row, col);
 
                 if(enemyCellState.getState() == CellState.HIT){
-                    enemyCell.setStyle("-fx-border-color: black; -fx-background-color: red;");
+                    enemyCell.setStyle(CellColors.HIT_CELL_COLOR);
                 }else if(enemyCellState.getState() == CellState.MISS){
-                    enemyCell.setStyle("-fx-border-color: black; -fx-background-color: gray;");
+                    enemyCell.setStyle(CellColors.MISS_CELL_COLOR);
                 }else{
-                    enemyCell.setStyle("-fx-border-color: black; -fx-background-color: #908a8a;");
+                    enemyCell.setStyle(CellColors.DEFAULT_CELL_COLOR);
                 }
             }
         }
@@ -364,7 +369,7 @@ public class Game{
         if(result.isPresent() && result.get() == ButtonType.OK){
             try{
                 // Load the welcome screen
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/sj/batlleship/batlleship/welcome.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/sj/batlleship/batlleship/views/welcome.fxml"));
                 Parent root = fxmlLoader.load();
 
                 // Get the current stage

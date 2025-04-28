@@ -6,7 +6,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -39,7 +38,7 @@ public class Welcome{
      */
     private void loadGameScene(ActionEvent actionEvent, boolean randomCPU){
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/sj/batlleship/batlleship/game-scene.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/sj/batlleship/batlleship/views/game-scene.fxml"));
             Parent root = fxmlLoader.load();
             Game gameController = fxmlLoader.getController(); // get game controller
             gameController.setUseRandomCPU(randomCPU);

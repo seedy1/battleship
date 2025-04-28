@@ -1,5 +1,6 @@
 package com.sj.batlleship.batlleship.models;
 
+import com.sj.batlleship.batlleship.constants.CellColors;
 import com.sj.batlleship.batlleship.enums.CellState;
 import com.sj.batlleship.batlleship.enums.Orientation;
 import javafx.scene.image.Image;
@@ -94,7 +95,8 @@ public class PlayerGameBoard {
                 Cell cell = grid[row][col];
                 StackPane cellPane = new StackPane();
                 cellPane.setPrefSize(visualGridSize, visualGridSize);
-                cellPane.setStyle("-fx-border-color: black; -fx-background-color: #908a8a;");
+//                cellPane.setStyle("-fx-border-color: black; -fx-background-color: #908a8a;");
+                cellPane.setStyle(CellColors.DEFAULT_CELL_COLOR);
 
                 if(cell.getState() == CellState.SHIP && showShips){
                     System.out.println("Found ship at (" + row + "," + col + ")");
@@ -113,9 +115,9 @@ public class PlayerGameBoard {
                         }
                     }
                 }else if(cell.getState() == CellState.HIT){
-                    cellPane.setStyle("-fx-border-color: black; -fx-background-color: red;");
+                    cellPane.setStyle(CellColors.HIT_CELL_COLOR);
                 }else if(cell.getState() == CellState.MISS){
-                    cellPane.setStyle("-fx-border-color: black; -fx-background-color: gray;");
+                    cellPane.setStyle(CellColors.MISS_CELL_COLOR);
                 }
                 gridPane.add(cellPane, col, row);
             }

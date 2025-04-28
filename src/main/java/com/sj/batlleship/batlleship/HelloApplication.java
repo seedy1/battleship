@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.kordamp.bootstrapfx.BootstrapFX;
 
@@ -28,9 +29,14 @@ public class HelloApplication extends Application{
     public void start(Stage stage) throws IOException{
 //        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("welcome.fxml"));
 //        Parent rootNode = FXMLLoader.load(getClass().getResource("welcome.fxml"));
-        Parent rootNode = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("welcome.fxml")));
+        Parent rootNode = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("views/welcome.fxml")));
         Scene scene = new Scene(rootNode);
         scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
+        
+        // Set application icon
+        Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("icon/ship.png")));
+        stage.getIcons().add(icon);
+        
         stage.setTitle("Battleship Game");
         stage.setScene(scene);
         stage.show();
