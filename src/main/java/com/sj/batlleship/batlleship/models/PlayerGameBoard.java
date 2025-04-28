@@ -37,7 +37,7 @@ public class PlayerGameBoard {
      * @param col the column coordinate where the ship will be placed
      * @return true if the ship is successfully placed, false otherwise
      */
-    public boolean placeShip(Ship ship, int row, int col) {
+    public boolean placeShip(Ship ship, int row, int col){
         System.out.println("Attempting to place ship: " + ship.getImageName() + " at (" + row + "," + col + ") with orientation: " + ship.getOrientation());
         int size = ship.getSize();
         Orientation ori = ship.getOrientation();

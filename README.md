@@ -1,7 +1,7 @@
 - [x] random AI
 - [x] refactor
 - [x] smart AI
-- [] unit test
+- [x] unit test
 - [] impr UI
 - [] refactor 
 - [] CI/CD (create build on commits to master; if tests pass aussi)
