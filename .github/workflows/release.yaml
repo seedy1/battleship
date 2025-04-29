@@ -31,6 +31,8 @@ jobs:
         run: |
           mvn clean package
           mvn javafx:jlink
+          cd target
+          zip -r batlleship.zip batlleship
 
       - name: Create GitHub Release
         id: create_release

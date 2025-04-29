@@ -4,8 +4,8 @@
 - [x] unit test
 - [x] impr UI
 - [] refactor 
-- [] CI/CD (create build on commits to master; if tests pass aussi)
-- [] local builds
+- [x] CI/CD (create build on commits to master; if tests pass aussi)
+- [x] local builds
 - [] smart AI 2.0
 - [] CI/CD (create release for all platforms)
 
