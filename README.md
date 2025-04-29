@@ -81,4 +81,5 @@ https://docs.oracle.com/javase/9/docs/api/java/awt/Taskbar.html
 ## future features and improvemnts
 
 1. Multiplayer Lan
-2. Animations
+2. TestFX for ui and int testing
+3. Animations

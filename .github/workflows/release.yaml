@@ -9,6 +9,9 @@ on:
     tags:
       - 'v*'  # Trigger only when a tag starting with v is pushed
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,7 +27,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Build with Maven (jlink)
+      - name: Build with Maven  and create runtime image
         run: mvn clean javafx:jlink
 
       - name: Create GitHub Release
@@ -38,7 +41,17 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload app.zip to Release
+      - name: Upload JAR to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/batlleship-1.0-SNAPSHOT.jar
+          asset_name: battleship-${{ github.ref_name }}.jar
+          asset_content_type: application/java-archive
+
+      - name: Upload Runtime Image to Release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
