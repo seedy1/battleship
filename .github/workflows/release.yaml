@@ -20,7 +20,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 22
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           java-version: '22'
@@ -28,7 +28,9 @@ jobs:
           cache: maven
 
       - name: Build with Maven  and create runtime image
-        run: mvn clean javafx:jlink
+        run: |
+          mvn clean package
+          mvn javafx:jlink
 
       - name: Create GitHub Release
         id: create_release
@@ -51,12 +53,17 @@ jobs:
           asset_name: battleship-${{ github.ref_name }}.jar
           asset_content_type: application/java-archive
 
+      - name: Finding JAR file
+        id: find_jar
+        run: echo "JAR_PATH=$(find target -name "*.jar" | head -n 1)" >> $GITHUB_ENV
+
       - name: Upload Runtime Image to Release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/battleship.zip
+#          asset_path: ./target/battleship.zip
+          asset_path: ${{ env.JAR_PATH }}
           asset_name: battleship-${{ github.ref_name }}.zip
           asset_content_type: application/zip
