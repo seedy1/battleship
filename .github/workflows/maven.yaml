@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Build Java CI
+name: Build JavaFX
 
 on:
   push:

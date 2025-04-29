@@ -2,7 +2,7 @@ name: Release Battleship App
 
 on:
   workflow_run:
-    workflow_run: ["name"]
+    workflow_run: ["build"]
     types:
       - completed
   push:
