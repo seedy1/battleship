@@ -85,6 +85,26 @@
                             <noHeaderFiles>true</noHeaderFiles>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>create-runtime-image</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jlink</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>com.sj.batlleship.batlleship/com.sj.batlleship.batlleship.HelloApplication</mainClass>
+                            <launcher>batlleship=com.sj.batlleship.batlleship/com.sj.batlleship.batlleship.HelloApplication</launcher>
+                            <jlinkZipName>batlleship</jlinkZipName>
+                            <jlinkImageName>batlleship</jlinkImageName>
+                            <noManPages>true</noManPages>
+                            <stripDebug>true</stripDebug>
+                            <noHeaderFiles>true</noHeaderFiles>
+                            <options>
+                                <option>--add-opens</option>
+                                <option>java.base/java.lang=ALL-UNNAMED</option>
+                            </options>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
