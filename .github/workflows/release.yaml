@@ -2,7 +2,7 @@ name: Release Battleship App
 
 on:
   workflow_run:
-    workflow_run: ["build"]
+    workflows: ["Build JavaFX"]
     types:
       - completed
   push:
