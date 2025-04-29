@@ -77,9 +77,9 @@
                         <configuration>
                             <mainClass>com.sj.batlleship.batlleship/com.sj.batlleship.batlleship.HelloApplication
                             </mainClass>
-                            <launcher>battleship</launcher>
-                            <jlinkZipName>battleship</jlinkZipName>
-                            <jlinkImageName>battleship</jlinkImageName>
+                            <launcher>batlleship</launcher>
+                            <jlinkZipName>batlleship</jlinkZipName>
+                            <jlinkImageName>batlleship</jlinkImageName>
                             <noManPages>true</noManPages>
                             <stripDebug>true</stripDebug>
                             <noHeaderFiles>true</noHeaderFiles>

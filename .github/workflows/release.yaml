@@ -63,7 +63,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-#          asset_path: ./target/battleship.zip
           asset_path: ${{ env.JAR_PATH }}
           asset_name: battleship-${{ github.ref_name }}.zip
           asset_content_type: application/zip
