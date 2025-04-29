@@ -18,12 +18,12 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>22-ea+11</version>
+            <version>21.0.7</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>22-ea+11</version>
+            <version>21.0.7</version>
         </dependency>
         <dependency>
             <groupId>net.synedra</groupId>
@@ -77,9 +77,9 @@
                         <configuration>
                             <mainClass>com.sj.batlleship.batlleship/com.sj.batlleship.batlleship.HelloApplication
                             </mainClass>
-                            <launcher>app</launcher>
-                            <jlinkZipName>app</jlinkZipName>
-                            <jlinkImageName>app</jlinkImageName>
+                            <launcher>battleship</launcher>
+                            <jlinkZipName>battleship</jlinkZipName>
+                            <jlinkImageName>battleship</jlinkImageName>
                             <noManPages>true</noManPages>
                             <stripDebug>true</stripDebug>
                             <noHeaderFiles>true</noHeaderFiles>
@@ -87,6 +87,19 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.sj.batlleship.batlleship.HelloApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 </project>
