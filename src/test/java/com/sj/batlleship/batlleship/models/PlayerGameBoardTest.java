@@ -46,7 +46,7 @@ class PlayerGameBoardTest {
         assertFalse(board.placeShip(ship, 0, 8)); // Would go beyond column 10
         ship.setOrientation(Orientation.VERTICAL);
         assertFalse(board.placeShip(ship, 8, 0)); // Would go beyond row 10
-        System.out.println("TEST:: "+board.placeShip(ship, 8, 0));
+//        System.out.println("TEST:: "+board.placeShip(ship, 8, 0));
     }
     
     @Test

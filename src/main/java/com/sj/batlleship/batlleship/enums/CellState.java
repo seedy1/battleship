@@ -1,6 +1,5 @@
 package com.sj.batlleship.batlleship.enums;
 
-//generate java doc
 /**
  * The CellState class defines the state of a cell in a certain context (like a game board).
  * It contains an enumeration CellState that lists all the possible states a cell can have.

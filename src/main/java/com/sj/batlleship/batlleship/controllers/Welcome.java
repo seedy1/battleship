@@ -1,5 +1,6 @@
 package com.sj.batlleship.batlleship.controllers;
 
+import com.sj.batlleship.batlleship.constants.Paths;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,7 +39,8 @@ public class Welcome{
      */
     private void loadGameScene(ActionEvent actionEvent, boolean randomCPU){
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/sj/batlleship/batlleship/views/game-scene.fxml"));
+//            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/sj/batlleship/batlleship/views/game-scene.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(Paths.GAME_SCENE));
             Parent root = fxmlLoader.load();
             Game gameController = fxmlLoader.getController(); // get game controller
             gameController.setUseRandomCPU(randomCPU);

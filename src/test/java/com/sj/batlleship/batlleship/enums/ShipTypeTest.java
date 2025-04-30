@@ -9,7 +9,7 @@ class ShipTypeTest{
     @Test
     void testShipTypeValues(){
         // Test that all expected values exist
-        assertEquals(2, ShipType.values().length);
+        assertEquals(5, ShipType.values().length);
         assertNotNull(ShipType.valueOf("BATTLESHIP"));
         assertNotNull(ShipType.valueOf("CARRIER"));
     }
@@ -21,7 +21,7 @@ class ShipTypeTest{
         assertEquals("battleship.jpg", ShipType.BATTLESHIP.imageName);
         
         assertEquals(5, ShipType.CARRIER.size);
-        assertEquals("cru2.jpg", ShipType.CARRIER.imageName);
+        assertEquals("carrier.jpg", ShipType.CARRIER.imageName);
     }
     
     @Test
@@ -35,7 +35,7 @@ class ShipTypeTest{
         Ship carrier = ShipType.CARRIER.createShip();
         assertNotNull(carrier);
         assertEquals(5, carrier.getSize());
-        assertEquals("cru2.jpg", carrier.getImageName());
+        assertEquals("carrier.jpg", carrier.getImageName());
     }
     
     @Test

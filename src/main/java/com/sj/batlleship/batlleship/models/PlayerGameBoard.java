@@ -18,13 +18,29 @@ import java.util.List;
  * and checking game state.
  */
 public class PlayerGameBoard {
-    private Cell[][] grid = new Cell[10][10];
-    private List<Ship> ships = new ArrayList<>();
-    final static double visualGridSize = 38.0;
-    // get grids for easy tracking
-    PlayerGameBoard(){
-        for(int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
+    private static final int BOARD_SIZE = 10;
+    private static final double VISUAL_GRID_SIZE = 38.0;
+    private static final double SHIP_IMAGE_SIZE = 30.0;
+    private static final String SHIP_IMAGE_PATH = "/com/sj/batlleship/batlleship/images/";
+
+    private final Cell[][] grid;
+    private final List<Ship> ships;
+
+    /**
+     * Constructs a new PlayerGameBoard with an empty grid and no ships.
+     */
+    public PlayerGameBoard(){
+        this.grid = new Cell[BOARD_SIZE][BOARD_SIZE];
+        this.ships = new ArrayList<>();
+        initializeGrid();
+    }
+
+    /**
+     * Initializes the grid with empty cells.
+     */
+    private void initializeGrid(){
+        for(int i = 0; i < BOARD_SIZE; i++){
+            for(int j = 0; j < BOARD_SIZE; j++){
                 grid[i][j] = new Cell(i, j);
             }
         }
@@ -39,156 +55,168 @@ public class PlayerGameBoard {
      * @return true if the ship is successfully placed, false otherwise
      */
     public boolean placeShip(Ship ship, int row, int col){
-        System.out.println("Attempting to place ship: " + ship.getImageName() + " at (" + row + "," + col + ") with orientation: " + ship.getOrientation());
-        int size = ship.getSize();
-        Orientation ori = ship.getOrientation();
-        if(ori == Orientation.HORIZONTAL && col + size > 10){
-            System.out.println("Ship placement failed: Would exceed board width");
+        if (!isValidPlacement(ship, row, col)) {
             return false;
         }
-        if(ori == Orientation.VERTICAL && row + size > 10){
-            System.out.println("Ship placement failed: Would exceed board height");
-            return false;
-        }
-        for(int i = 0; i < size; i++){
-            int r = ori == Orientation.HORIZONTAL ? row : row + i;
-            int c = ori == Orientation.HORIZONTAL ? col + i : col;
-            if (grid[r][c].getState() != CellState.EMPTY) {
-                System.out.println("Ship placement failed: Cell at (" + r + "," + c + ") is not empty");
-                return false;
-            }
-        }
-        for(int i = 0; i < size; i++){
-            int r = ori == Orientation.HORIZONTAL ? row : row + i;
-            int c = ori == Orientation.HORIZONTAL ? col + i : col;
-            grid[r][c].setState(CellState.SHIP);
-            grid[r][c].setShip(ship);
-            System.out.println("Placed ship part at (" + r + "," + c + ")");
-        }
-        ship.setPosition(row, col);
+        placeShipOnGrid(ship, row, col);
         ships.add(ship);
-        System.out.println("Ship placement successful");
         return true;
     }
 
-    public void placeShipInteractive(int row, int col){
-        Ship ship = new Ship(3, "cru2.jpg"); // example ship, fixed size for demo
-        placeShip(ship, row, col);
+    /**
+     * Checks if a ship can be placed at the specified coordinates.
+     */
+    private boolean isValidPlacement(Ship ship, int row, int col){
+        int size = ship.getSize();
+        Orientation orientation = ship.getOrientation();
+
+        if(orientation == Orientation.HORIZONTAL && col + size > BOARD_SIZE){
+            return false;
+        }
+        if(orientation == Orientation.VERTICAL && row + size > BOARD_SIZE){
+            return false;
+        }
+
+        return isAreaEmpty(ship, row, col);
     }
 
-//    for debugging purposes
-    public void displayOnGrid(GridPane gridPane, boolean showShips){
-        System.out.println("Displaying grid with showShips=" + showShips);
-        // Clear the grid first
-        gridPane.getChildren().clear();
-        /*for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                Cell cell = grid[i][j];
-                ImageView imageView = new ImageView();
-                if (cell.getState() == CellState.SHIP && showShips) {
-
-                }
+    /**
+     * Checks if the area where the ship will be placed is empty.
+     */
+    private boolean isAreaEmpty(Ship ship, int row, int col){
+        int size = ship.getSize();
+        Orientation orientation = ship.getOrientation();
+        for(int i = 0; i < size; i++){
+            int r = orientation == Orientation.HORIZONTAL ? row : row + i;
+            int c = orientation == Orientation.HORIZONTAL ? col + i : col;
+            if(grid[r][c].getState() != CellState.EMPTY){
+                return false;
             }
-        }*/
-        for(int row = 0; row < 10; row++){
-            for(int col = 0; col < 10; col++){
-                Cell cell = grid[row][col];
-                StackPane cellPane = new StackPane();
-                cellPane.setPrefSize(visualGridSize, visualGridSize);
-//                cellPane.setStyle("-fx-border-color: black; -fx-background-color: #908a8a;");
-                cellPane.setStyle(CellColors.DEFAULT_CELL_COLOR);
+        }
+        return true;
+    }
 
-                if(cell.getState() == CellState.SHIP && showShips){
-                    System.out.println("Found ship at (" + row + "," + col + ")");
-                    Ship ship = cell.getShip();
-                    if(ship != null){
-                        System.out.println("Loading ship image: " + ship.getImageName());
-                        try{
-                            ImageView img = new ImageView(new Image(getClass().getResourceAsStream("/com/sj/batlleship/batlleship/images/" + ship.getImageName())));
-                            img.setFitWidth(30);
-                            img.setFitHeight(30);
-                            cellPane.getChildren().add(img);
-                            System.out.println("Ship image added to cell");
-                        }catch(Exception e){
-                            System.out.println("Error loading ship image: " + e.getMessage());
-                            e.printStackTrace();
-                        }
-                    }
-                }else if(cell.getState() == CellState.HIT){
-                    cellPane.setStyle(CellColors.HIT_CELL_COLOR);
-                }else if(cell.getState() == CellState.MISS){
-                    cellPane.setStyle(CellColors.MISS_CELL_COLOR);
-                }
+    /**
+     * Places the ship on the grid at the specified coordinates.
+     */
+    private void placeShipOnGrid(Ship ship, int row, int col){
+        int size = ship.getSize();
+        Orientation orientation = ship.getOrientation();
+        for (int i = 0; i < size; i++){
+            int r = orientation == Orientation.HORIZONTAL ? row : row + i;
+            int c = orientation == Orientation.HORIZONTAL ? col + i : col;
+            grid[r][c].setState(CellState.SHIP);
+            grid[r][c].setShip(ship);
+        }
+        ship.setPosition(row, col);
+    }
+
+    /**
+     * Displays the game board on a JavaFX GridPane.
+     *
+     * @param gridPane the GridPane to display the board on
+     * @param showShips whether to show the ships on the board
+     */
+    public void displayOnGrid(GridPane gridPane, boolean showShips){
+        gridPane.getChildren().clear();
+        for(int row = 0; row < BOARD_SIZE; row++){
+            for(int col = 0; col < BOARD_SIZE; col++){
+                StackPane cellPane = createCellPane(grid[row][col], showShips);
                 gridPane.add(cellPane, col, row);
             }
         }
     }
 
-    public void printBoardToConsole(){
-        System.out.println("Computer Board (Console View):");
-        for(int row = 0; row < 10; row++){
-            for(int col = 0; col < 10; col++){
-                Cell cell = grid[row][col];
-                switch(cell.getState()){
-                    case EMPTY -> System.out.print(". ");
-                    case SHIP -> System.out.print("S ");
-                    case HIT -> System.out.print("X ");
-                    case MISS -> System.out.print("O ");
-                }
-            }
-            System.out.println();
+    /**
+     * Creates a StackPane representing a cell on the board.
+     */
+    private StackPane createCellPane(Cell cell, boolean showShips) {
+        StackPane cellPane = new StackPane();
+        cellPane.setPrefSize(VISUAL_GRID_SIZE, VISUAL_GRID_SIZE);
+        cellPane.setStyle(CellColors.DEFAULT_CELL_COLOR);
+        if(cell.getState() == CellState.SHIP && showShips){
+            addShipImage(cellPane, cell.getShip());
+        }else if(cell.getState() == CellState.HIT){
+            cellPane.setStyle(CellColors.HIT_CELL_COLOR);
+        }else if(cell.getState() == CellState.MISS){
+            cellPane.setStyle(CellColors.MISS_CELL_COLOR);
         }
-        System.out.println();
-    }
-
-    public boolean receiveAttack(int row, int column){
-        Cell attackCell = grid[row][column];
-        // Check if the cell has already been attacked
-        if(attackCell.getState() == CellState.HIT || attackCell.getState() == CellState.MISS){
-            return false;
-        }
-
-        if(attackCell.getState() == CellState.SHIP){
-            attackCell.setState(CellState.HIT);
-            Ship ship = attackCell.getShip();
-            if(ship != null){
-                // Calculate which part of the ship was hit
-                int hitIndex;
-                if(ship.getOrientation() == Orientation.HORIZONTAL){
-                    hitIndex = column - ship.getCol();
-                }else{
-                    hitIndex = row - ship.getRow();
-                }
-                ship.registerHit(hitIndex);
-                System.out.println("Ship hit at index " + hitIndex + " of " + ship.getSize());
-            }
-            return true;
-        }else if(attackCell.getState() == CellState.EMPTY){
-            attackCell.setState(CellState.MISS);
-            return true;
-        }
-        return false;// handle better; maybe just if e;lse if needed
+        return cellPane;
     }
 
     /**
-     * Checks if all ships on a game board are sunk.
+     * Adds a ship image to a cell pane.
+     */
+    private void addShipImage(StackPane cellPane, Ship ship){
+        if (ship == null){
+            return;
+        }
+
+        try {
+            ImageView img = new ImageView(new Image(getClass().getResourceAsStream(SHIP_IMAGE_PATH + ship.getImageName())));
+            img.setFitWidth(SHIP_IMAGE_SIZE);
+            img.setFitHeight(SHIP_IMAGE_SIZE);
+            cellPane.getChildren().add(img);
+        } catch (Exception e) {
+            System.err.println("Error loading ship image: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Processes an attack on the board at the specified coordinates.
+     *
+     * @param row the row coordinate
+     * @param column the column coordinate
+     * @return true if the attack was valid and processed, false otherwise
+     */
+    public boolean receiveAttack(int row, int column){
+        Cell attackCell = grid[row][column];
+        if (attackCell.getState() == CellState.HIT || attackCell.getState() == CellState.MISS) {
+            return false;
+        }
+        if (attackCell.getState() == CellState.SHIP) {
+            processHit(attackCell, row, column);
+            return true;
+        } else if (attackCell.getState() == CellState.EMPTY) {
+            attackCell.setState(CellState.MISS);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Processes a hit on a ship.
+     */
+    private void processHit(Cell cell, int row, int column){
+        cell.setState(CellState.HIT);
+        Ship ship = cell.getShip();
+        if (ship != null) {
+            int hitIndex = calculateHitIndex(ship, row, column);
+            ship.registerHit(hitIndex);
+        }
+    }
+
+    /**
+     * Calculates which part of the ship was hit.
+     */
+    private int calculateHitIndex(Ship ship, int row, int column){
+        return ship.getOrientation() == Orientation.HORIZONTAL ? column - ship.getCol() : row - ship.getRow();
+    }
+
+    /**
+     * Checks if all ships on the board are sunk.
+     *
      * @return true if all ships are sunk, false otherwise
      */
     public boolean isAllShipsSunk(){
-        for(Ship ship: ships){
-            if(!ship.isSunk()){
-                return false;
-            }
-        }
-        return true;
+        return ships.stream().allMatch(Ship::isSunk);
     }
 
     public Cell getCell(int row, int col){
         return grid[row][col];
     }
 
-    public Cell[][] getCells(){
-        return grid;
-    }
-
+//    public Cell[][] getCells() {
+//        return grid;
+//    }
 }

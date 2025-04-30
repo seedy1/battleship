@@ -4,8 +4,11 @@ import com.sj.batlleship.batlleship.models.Ship;
 
 public enum ShipType{
 
+    CARRIER(5, "carrier.jpg"),
     BATTLESHIP(4, "battleship.jpg"),
-    CARRIER(5, "cru2.jpg");
+    CRUISER(3, "cruiser.jpg"),
+    SUBMARINE(3, "submarine.jpg"),
+    DESTROYER(2, "destroyer.jpg");
 
     public final int size;
     public final String imageName;

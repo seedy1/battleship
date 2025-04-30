@@ -1,23 +1,22 @@
 package com.sj.batlleship.batlleship;
 
+import com.sj.batlleship.batlleship.constants.Paths;
+import com.sj.batlleship.batlleship.utils.SceneManager;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.kordamp.bootstrapfx.BootstrapFX;
 
 import java.io.IOException;
-import java.util.Objects;
 
 /**
  * This class represents a simple JavaFX application that displays a welcome screen for a Battleship game.
- * It extends the Application class and provides methods to start the application, load FXML files, create scenes with styles,
- * set stage properties, and show the stage.
+ * It extends the Application class and provides methods to start the application.
  */
 public class HelloApplication extends Application{
+    private static final String GAME_TITLE = "Battleship Game";
+
     /**
      * Loads the welcome screen FXML file, creates a scene with BootstrapFX stylesheet, sets the stage title to "Battleship Game",
      * sets the stage scene, and displays the stage.
@@ -27,41 +26,14 @@ public class HelloApplication extends Application{
      */
     @Override
     public void start(Stage stage) throws IOException{
-//        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("welcome.fxml"));
-//        Parent rootNode = FXMLLoader.load(getClass().getResource("welcome.fxml"));
-        Parent rootNode = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("views/welcome.fxml")));
-        Scene scene = new Scene(rootNode);
-        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
-        
-        // Set application icon
-        Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("icon/ship.png")));
-        stage.getIcons().add(icon);
-        
-        stage.setTitle("Battleship Game");
-        stage.setScene(scene);
-        stage.show();
+        Parent root = SceneManager.loadFXML(Paths.WELCOME_SCENE);
+        Scene scene = SceneManager.createSceneWithStyles(root, BootstrapFX.bootstrapFXStylesheet());
+        SceneManager.setStageProperties(stage, scene, GAME_TITLE);
+        SceneManager.setStageIcon(stage, Paths.APP_ICON);
+        SceneManager.showStage(stage);
     }
 
-    private Parent loadFXML(String fxml) throws IOException{
-        return FXMLLoader.load(getClass().getResource(fxml));
-    }
-
-    private Scene createSceneWithStyles(Parent rootNode, String stylesheet){
-        Scene scene = new Scene(rootNode);
-        scene.getStylesheets().add(stylesheet);
-        return scene;
-    }
-
-    private void setStageProperties(Stage stage, Scene scene, String title){
-        stage.setTitle(title);
-        stage.setScene(scene);
-    }
-
-    private void showStage(Stage stage){
-        stage.show();
-    }
-
-    public static void main(String[] args) {
+    public static void main(String[] args){
         launch();
     }
 }

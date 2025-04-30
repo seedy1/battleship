@@ -6,7 +6,7 @@ import com.sj.batlleship.batlleship.models.Ship;
 
 import java.util.Random;
 
-public class RandomAIStrategy implements AIStrategy {
+public class RandomAIStrategy implements AIStrategy{
     private final Random rand = new Random();
 
     @Override
