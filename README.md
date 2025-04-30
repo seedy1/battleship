@@ -1,19 +1,3 @@
-### TODO
-- [x] random AI
-- [x] refactor
-- [x] smart AI
-- [x] unit test
-- [x] improve UI
-- [x] refactor 2.0
-- [x] CI/CD (create build on commits to master; if tests pass aussi)
-- [x] local builds
-- [] smart AI 2.0
-- [x] CI/CD (create release for all platforms)
-- [x] add all 5 ships
-- [x] update README
-
-
-
 # Javafx Battleship Game (MVC)
 Battleship is a strategy guessing game for two players. It is 
 played on ruled grids where each player marks their fleet of ships.
@@ -90,7 +74,7 @@ Using GitHub Actions I was able to automate some processes like running test aga
 any push or pull request to master. This makes sure all test pass and nothing did not break.
 I also made another workflow that builds the project as a portable application that uses
 an embedded Java runtime. For now this only creates a `batlleship.zip` file for linux. A future
-improvement I would be to make one for MacOS and Windows OS too.
+improvement I would be to make one for acOS and Windows OS too.
 ![CI/CD](git.png "Git")
 
 ## Game modes
@@ -177,6 +161,7 @@ ideal for the straightforward interface required by this project.
 
 ## Extra
 ### JavaFx Application Lifecycle Methods
+
 >start() − The entry point method where the JavaFX graphics code is to be written.
 
 > stop() − An empty method which can be overridden, here you can write the 
@@ -188,71 +173,54 @@ stage or scene in this method.
 
 ## Project Structure
 ```
-BattleshipGame/
+battleship/
+├── .github/
+│   └── workflows/
 ├── src/
-│   └── main/
-│       ├── java/
-│       │   └── com/sj/batlleship/batlleship/
-│       │       ├── HelloApplication.java
-│       │       ├── controllers/
-│       │       │   ├── GameController.java
-│       │       │   └── WelcomeController.java
-│       │       ├── models/
-│       │       │   ├── GameBoard.java
-│       │       │   ├── Cell.java
-│       │       │   ├── Ship.java
-│       │       │   ├── Player.java
-│       │       │   ├── HumanPlayer.java
-│       │       │   └── ComputerPlayer.java
-│       │       ├── strategies/
-|       |       |   |── AIStrategy.java
-│       │       │   ├── RandomStrategy.java
-│       │       │   └── SmartStrategy.java
-│       │       ├── enums/
-│       │       │   ├── Orientation.java
-│       │       │   ├── CellState.java
-│       │       │   └── GameState.java
-│       │       └── constants/
-│       │           └── GameConstants.java
-│       └── resources/
-│           └── com/sj/batlleship/batlleship/
-│               ├── views/
-│               │   ├── game-scene.fxml
-│               │   └── welcome.fxml
-│               ├── images/
-│               │   ├── carrier.png
-│               │   ├── battleship.png
-│               │   ├── cruiser.png
-│               │   ├── submarine.png
-│               │   └── destroyer.png
-│               └── icon/
-│                   └── ship.png
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/sj/battleship/
+│   │   │       ├── controllers/
+│   │   │       ├── models/
+│   │   │       ├── strategies/
+│   │   │       ├── enums/
+│   │   │       ├── BattleshipApplication.java (Main application class)
+│   │   │       └── constants/
+│   │   └── resources/
+│   │       ├── com/sj/battleship/
+│   │       │   ├── views/
+│   │       │   ├── icons/
+│   │       │   └── images/
+│   └── test/
+│       └── java/
+│           └── com/sj/battleship/
+│               ├── controllers
+│               ├── enums
+│               └── models
+├── board.png (Game screenshot)
+├── game.png (Game screenshot)
+├── git.png (CI/CD screenshot)
+├── pom.xml (Maven configuration)
 └── README.md
 ```
 
 
 ---
-
-
-create .jar
-`mvn clean package -DskipTests` then `java -jar battleshipv.jar`
-
-> `mvn javafx:jlink` to get zip
->
-mvn clean javafx:jlink jpackage:jpackage
-creates
-> target/dist/Battleship-1.0.0.dmg (macOS)
-> target/dist/Battleship-1.0.0.msi (Windows)
-> target/dist/Battleship-1.0.0.deb (Linux)
-
-TL;DR
-Run and develop → javafx:run
-
-Package self-contained runtime → jlink:jlink
-
-Create native installer → jpackage:jpackage
-
 <details close>
   <summary>TASK</summary>
-  World!
+
+- [x] random AI
+- [x] refactor
+- [x] smart AI
+- [x] unit test
+- [x] improve UI
+- [x] refactor 2.0
+- [x] CI/CD (create build on commits to master; if tests pass aussi)
+- [x] local builds
+- [x] smart AI 2.0
+- [x] CI/CD (create release for all platforms)
+- [x] add all 5 ships
+- [x] update README
 </details>
+
+---

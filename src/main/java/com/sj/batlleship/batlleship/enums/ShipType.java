@@ -2,6 +2,9 @@ package com.sj.batlleship.batlleship.enums;
 
 import com.sj.batlleship.batlleship.models.Ship;
 
+/**
+ * Enum representing different types of ships with their size and image name.
+ */
 public enum ShipType{
 
     CARRIER(5, "carrier.jpg"),

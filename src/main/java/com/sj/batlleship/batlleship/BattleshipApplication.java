@@ -13,13 +13,14 @@ import java.io.IOException;
 /**
  * This class represents a simple JavaFX application that displays a welcome screen for a Battleship game.
  * It extends the Application class and provides methods to start the application.
+ * @author seedy1
+ * @version 1.0
  */
-public class HelloApplication extends Application{
+public class BattleshipApplication extends Application{
     private static final String GAME_TITLE = "Battleship Game";
 
     /**
-     * Loads the welcome screen FXML file, creates a scene with BootstrapFX stylesheet, sets the stage title to "Battleship Game",
-     * sets the stage scene, and displays the stage.
+     * Loads the welcome screen FXML file
      *
      * @param stage the primary stage for this application, where the welcome screen will be displayed
      * @throws IOException if an error occurs while loading the welcome.fxml file

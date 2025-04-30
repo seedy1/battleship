@@ -46,24 +46,24 @@ public class SceneManager{
      * @param scene the scene to set on the stage
      * @param title the title to set on the stage
      */
-    public static void setStageProperties(Stage stage, Scene scene, String title) {
+    public static void setStageProperties(Stage stage, Scene scene, String title){
         stage.setTitle(title);
         stage.setScene(scene);
     }
 
     /**
-     * Sets an icon on a stage.
+     * Sets an icon
      *
      * @param stage the stage to set the icon on
      * @param iconPath the path to the icon file
      */
-    public static void setStageIcon(Stage stage, String iconPath) {
+    public static void setStageIcon(Stage stage, String iconPath){
         Image icon = new Image(Objects.requireNonNull(SceneManager.class.getResourceAsStream(iconPath)));
         stage.getIcons().add(icon);
     }
 
     /**
-     * Shows a stage.
+     * Shows a stage which has a scene
      *
      * @param stage the stage to show
      */

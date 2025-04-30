@@ -43,6 +43,7 @@ public class Ship{
         return imageName;
     }
 
+    // isSunk()
     public boolean isSunk(){
         for(boolean hit: hits){
             if(!hit){

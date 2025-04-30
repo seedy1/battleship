@@ -4,7 +4,6 @@ import com.sj.batlleship.batlleship.strategies.RandomAIStrategy;
 
 public class RandomAIPlayer extends Player{
     public RandomAIPlayer(){
-        System.out.println("RandomAIPlayer: constructor");
         setAIStrategy(new RandomAIStrategy());
     }
 

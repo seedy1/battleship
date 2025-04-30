@@ -75,7 +75,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.sj.batlleship.batlleship/com.sj.batlleship.batlleship.HelloApplication
+                            <mainClass>com.sj.batlleship.batlleship/com.sj.batlleship.batlleship.BattleshipApplication
                             </mainClass>
                             <launcher>batlleship</launcher>
                             <jlinkZipName>batlleship</jlinkZipName>
@@ -94,7 +94,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.sj.batlleship.batlleship.HelloApplication</mainClass>
+                            <mainClass>com.sj.batlleship.batlleship.BattleshipApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

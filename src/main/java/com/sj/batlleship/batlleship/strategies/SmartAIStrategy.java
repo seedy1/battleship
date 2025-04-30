@@ -1,7 +1,5 @@
 package com.sj.batlleship.batlleship.strategies;
 
-import com.sj.batlleship.batlleship.constants.Constants;
-import com.sj.batlleship.batlleship.enums.CellState;
 import com.sj.batlleship.batlleship.enums.Orientation;
 import com.sj.batlleship.batlleship.enums.ShipType;
 import com.sj.batlleship.batlleship.models.PlayerGameBoard;
@@ -9,40 +7,42 @@ import com.sj.batlleship.batlleship.models.Ship;
 
 import java.util.*;
 
-public class SmartAIStrategy implements AIStrategy {
+/**
+ * Implements the AIStrategy interface to define the behavior of a smart AI player in a game.
+ * The SmartAIStrategy class uses a combination of strategies to intelligently place ships
+ * on its board and make calculated moves against the opponent.
+ */
+public class SmartAIStrategy implements AIStrategy{
     private final Random rand = new Random();
+    private final List<int[]> checkerPatternTargets = new ArrayList<>();
+    private final Queue<int[]> followUpTargets = new LinkedList<>();
+    private final Set<String> visited = new HashSet<>();
 
-    private List<int[]> hitCells = new ArrayList<>();
-    private Set<String> triedFollowUps = new HashSet<>();
-    private List<int[]> potentialTargets = new ArrayList<>();
-    private int currentTargetIndex = 0;
-    private boolean isHuntingMode = true;
-    private boolean isHorizontalSearch = true;
-    private boolean triedReversing = false;
-
-    private int lastHitRow = -1;
-    private int lastHitCol = -1;
-
-    private enum Direction { UP, DOWN, LEFT, RIGHT }
-    private Direction confirmedDirection = null;
+    public SmartAIStrategy(){
+        // Generate checkerboard pattern
+        // |x| |x| |x| |
+        // | |x| |x| | |
+        // |x| |x| |x| |
+        for(int row = 0; row < 10; row++){
+            for(int col = 0; col < 10; col++){
+                if((row + col) % 2 == 0){
+                    checkerPatternTargets.add(new int[]{row, col});
+                }
+            }
+        }
+        Collections.shuffle(checkerPatternTargets);
+    }
 
     @Override
-    public void placeShips(PlayerGameBoard myBoard) {
+    public void placeShips(PlayerGameBoard myBoard){
         for (ShipType shipType : ShipType.values()) {
             boolean placed = false;
             int attempts = 0;
 
             while (!placed && attempts < 100) {
                 boolean isHorizontal = rand.nextBoolean();
-                int row, col;
-
-                if (shipType.size >= 4) {
-                    row = 2 + rand.nextInt(6);
-                    col = 2 + rand.nextInt(6);
-                } else {
-                    row = 1 + rand.nextInt(8);
-                    col = 1 + rand.nextInt(8);
-                }
+                int row = rand.nextInt(10);
+                int col = rand.nextInt(10);
 
                 Ship ship = shipType.createShip();
                 ship.setOrientation(isHorizontal ? Orientation.HORIZONTAL : Orientation.VERTICAL);
@@ -50,150 +50,60 @@ public class SmartAIStrategy implements AIStrategy {
                 attempts++;
             }
         }
+        System.out.println("Ships placed by AI.");
     }
 
     @Override
-    public void makeMove(PlayerGameBoard oppBoard) {
-        if (hitCells.isEmpty()) {
-            makeInitialMove(oppBoard);
-        } else {
+    public void makeMove(PlayerGameBoard oppBoard){
+        if(!followUpTargets.isEmpty()){
             makeFollowUpMove(oppBoard);
+        }else{
+            makeCheckerboardMove(oppBoard);
         }
     }
 
-    private void makeInitialMove(PlayerGameBoard oppBoard) {
-        if (potentialTargets.isEmpty()) {
-            for (int i = 0; i < 10; i += 2) {
-                for (int j = 0; j < 10; j += 2) {
-                    if ((i + j) % 2 == 0) {
-                        potentialTargets.add(new int[]{i, j});
-                    }
+    private void makeCheckerboardMove(PlayerGameBoard oppBoard){
+        while(!checkerPatternTargets.isEmpty()){
+            int[] cell = checkerPatternTargets.removeFirst();
+            int row = cell[0], col = cell[1];
+
+            if(visited.add(row + "," + col)){
+                boolean hit = oppBoard.receiveAttack(row, col);
+                if(hit){
+                    addAdjacentCells(row, col);
                 }
+                return;
             }
-            Collections.shuffle(potentialTargets);
-        }
-
-        if (currentTargetIndex < potentialTargets.size()) {
-            int[] target = potentialTargets.get(currentTargetIndex);
-            boolean hit = oppBoard.receiveAttack(target[0], target[1]);
-            if (hit) {
-                hitCells.add(target);
-                lastHitRow = target[0];
-                lastHitCol = target[1];
-                isHuntingMode = false;
-            }
-            currentTargetIndex++;
         }
     }
 
-    private void makeFollowUpMove(PlayerGameBoard oppBoard) {
-        // If direction is confirmed, follow it
-        if (confirmedDirection != null) {
-            int[] lastHit = hitCells.get(hitCells.size() - 1);
-            int newRow = lastHit[0];
-            int newCol = lastHit[1];
+    private void makeFollowUpMove(PlayerGameBoard oppBoard){
+        while(!followUpTargets.isEmpty()){
+            int[] cell = followUpTargets.poll();
+            int row = cell[0], col = cell[1];
 
-            switch (confirmedDirection) {
-                case UP -> newRow--;
-                case DOWN -> newRow++;
-                case LEFT -> newCol--;
-                case RIGHT -> newCol++;
-            }
-
-            if (isValidCell(newRow, newCol) && oppBoard.getCell(newRow, newCol).getState() == CellState.EMPTY) {
-                String key = newRow + "," + newCol;
-                if (!triedFollowUps.contains(key)) {
-                    boolean hit = oppBoard.receiveAttack(newRow, newCol);
-                    triedFollowUps.add(key);
-                    if (hit) {
-                        hitCells.add(new int[]{newRow, newCol});
-                        lastHitRow = newRow;
-                        lastHitCol = newCol;
-                        return;
-                    } else if (!triedReversing) {
-                        confirmedDirection = reverseDirection(confirmedDirection);
-                        triedReversing = true;
-                        return;
-                    } else {
-                        resetTargetingState();
-                        makeInitialMove(oppBoard);
-                        return;
-                    }
+            // always call isValidCell() first
+            if(isValidCell(row, col) && visited.add(row + "," + col)){
+                boolean hit = oppBoard.receiveAttack(row, col);
+                if(hit){
+                    addAdjacentCells(row, col); // expand from new hit
                 }
-            } else {
-                // invalid or already tried — reverse once
-                if (!triedReversing) {
-                    confirmedDirection = reverseDirection(confirmedDirection);
-                    triedReversing = true;
-                    return;
-                } else {
-                    resetTargetingState();
-                    makeInitialMove(oppBoard);
-                    return;
-                }
+                return;
             }
         }
-
-        // Try to determine direction from hits
-        if (hitCells.size() >= 2 && confirmedDirection == null) {
-            hitCells.sort(Comparator.comparingInt(a -> a[0] * 10 + a[1]));
-            int[] first = hitCells.get(0);
-            int[] second = hitCells.get(1);
-
-            if (first[0] == second[0]) {
-                confirmedDirection = (second[1] > first[1]) ? Direction.RIGHT : Direction.LEFT;
-            } else if (first[1] == second[1]) {
-                confirmedDirection = (second[0] > first[0]) ? Direction.DOWN : Direction.UP;
-            }
-        }
-
-        // Try surrounding cells if no direction yet
-        int[][] directions = {
-                {lastHitRow - 1, lastHitCol}, // UP
-                {lastHitRow + 1, lastHitCol}, // DOWN
-                {lastHitRow, lastHitCol - 1}, // LEFT
-                {lastHitRow, lastHitCol + 1}  // RIGHT
-        };
-        Direction[] dirEnums = {Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT};
-
-        for (int i = 0; i < directions.length; i++) {
-            int r = directions[i][0];
-            int c = directions[i][1];
-            if (isValidCell(r, c) && oppBoard.getCell(r, c).getState() == CellState.EMPTY) {
-                boolean hit = oppBoard.receiveAttack(r, c);
-                if (hit) {
-                    hitCells.add(new int[]{r, c});
-                    lastHitRow = r;
-                    lastHitCol = c;
-                    confirmedDirection = dirEnums[i];
-                    return;
-                }
-            }
-        }
-
-        // Nothing worked — reset to hunting
-        resetTargetingState();
-        makeInitialMove(oppBoard);
+        makeCheckerboardMove(oppBoard);
     }
 
-    private void resetTargetingState() {
-        hitCells.clear();
-        confirmedDirection = null;
-        triedFollowUps.clear();
-        triedReversing = false;
-        isHuntingMode = true;
-        isHorizontalSearch = true;
+    // Adds adjacent cells to the follow-up targets list if they are valid cells
+    private void addAdjacentCells(int row, int col){
+        if(isValidCell(row - 1, col)){followUpTargets.offer(new int[]{row - 1, col});}
+        if(isValidCell(row + 1, col)){followUpTargets.offer(new int[]{row + 1, col});}
+        if(isValidCell(row, col - 1)){followUpTargets.offer(new int[]{row, col - 1});}
+        if(isValidCell(row, col + 1)){followUpTargets.offer(new int[]{row, col + 1});}
     }
 
-    private Direction reverseDirection(Direction dir) {
-        return switch (dir) {
-            case UP -> Direction.DOWN;
-            case DOWN -> Direction.UP;
-            case LEFT -> Direction.RIGHT;
-            case RIGHT -> Direction.LEFT;
-        };
-    }
-
+    // Checks if the given cell coordinates are within the boundaries of a 10x10 grid.
     private boolean isValidCell(int row, int col) {
         return row >= 0 && row < 10 && col >= 0 && col < 10;
-    }}
+    }
+}

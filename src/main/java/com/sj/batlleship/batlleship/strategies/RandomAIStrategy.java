@@ -6,6 +6,9 @@ import com.sj.batlleship.batlleship.models.Ship;
 
 import java.util.Random;
 
+/**
+ * RandomAIStrategy class implements the AIStrategy interface to provide a random AI strategy for placing ships and making moves in a Battleship game.
+ */
 public class RandomAIStrategy implements AIStrategy{
     private final Random rand = new Random();
 
@@ -38,6 +41,7 @@ public class RandomAIStrategy implements AIStrategy{
             attempts++;
         }
 
+        //TODO: add logger since its an important information
         if(!moved){
             System.out.println("AI couldn't find a valid move after " + maxAttempts + " attempts");
         }
