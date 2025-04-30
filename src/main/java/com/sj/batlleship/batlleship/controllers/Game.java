@@ -96,7 +96,10 @@ public class Game{
         // TODO: add ship types on wiki
         shipsToDisplay = List.of(
                 ShipType.CARRIER,
-                ShipType.BATTLESHIP
+                ShipType.BATTLESHIP,
+                ShipType.CRUISER,
+                ShipType.SUBMARINE,
+                ShipType.DESTROYER
         );
         // set up grids
 //        randomAIPlayer.placeShipRandom();

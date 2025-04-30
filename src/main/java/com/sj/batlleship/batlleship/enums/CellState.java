@@ -8,7 +8,6 @@ package com.sj.batlleship.batlleship.enums;
  * @author seedy1
  * @version 1.0
  */
-//public class CellState{
     /**
      * The cellState enumeration lists the possible states of a cell.
      * It contains the following states:
@@ -17,7 +16,6 @@ package com.sj.batlleship.batlleship.enums;
      * HIT: The cell has been hit.
      * MISS: The cell has been missed.
      */
-    public enum CellState{
-        EMPTY, SHIP, HIT, MISS
-    }
-//}
+public enum CellState{
+    EMPTY, SHIP, HIT, MISS
+}
